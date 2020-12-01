@@ -12,8 +12,8 @@ void main(){
   return runApp(MyApp());
 }
 
-void use_future(String url){
-  get_res(url).then((value) {
+void use_future(String url){ //оборачиваем асинхр. функцию для вызова
+  get_res(url).then((value) { // после выполнения get_res результат передается в valuе и выполняется функция в {}
     print("hello");
     print(value);
   });
@@ -21,11 +21,11 @@ void use_future(String url){
 
 
 //"https://www.myurl.com/api/v1/test/123/?param1=one&param2=two";
-Future<String> get_res(url) async {
+Future<String> get_res(url) async { //асинхронная функция для работы с api
   var response = await http.get(url);
   print(response.statusCode);
   if (response.statusCode == 200){
-    var to_parse = json.decode(response.body)['results'];
+    var to_parse = json.decode(response.body)['results'];//будущий парсер json
     print(to_parse);
   }
 
@@ -58,10 +58,10 @@ class _HomePageState extends State<HomePage> { // здесь начинаетс�
   Geolocator _geolocator;
   Position _position;
 
-  void updateLocation() async {
+  void updateLocation() async {//функция для обновления локации (ваш кеп)
+    print("!");
     try {
       Position newPosition = await Geolocator().getCurrentPosition().timeout(new Duration(seconds: 5));
-
       setState(() {
         _position = newPosition;
       });
@@ -76,10 +76,10 @@ class _HomePageState extends State<HomePage> { // здесь начинаетс�
 
     _geolocator = Geolocator();
     updateLocation();
-    _timer = Timer.periodic(Duration(seconds: 10), (_) {
+    _timer = Timer.periodic(Duration(seconds: 10), (_) { //обновление состояния по таймеру
       setState(() {
           use_future("https://api.openaq.org/v1/locations/?coordinates=${_position.latitude},${_position.longitude}&radius=20000");
-          _marker = Marker(
+          _marker = Marker(//
             width: 80.0,
             height: 80.0,
             point: LatLng(_position.latitude,_position.longitude),
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> { // здесь начинаетс�
 
 
   @override
-  void dispose() {
+  void dispose() { //сам не знаю, что это но походу сброс таймера
     super.dispose();
     _timer.cancel();
   }
