@@ -1,0 +1,660 @@
+{
+   "plus_code" : {
+      "compound_code" : "84X4+84 San Jose, CA, USA",
+      "global_code" : "849W84X4+84"
+   },
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "584",
+               "short_name" : "584",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "North 4th Street",
+               "short_name" : "N 4th St",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Central San Jose",
+               "short_name" : "Central San Jose",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "95112",
+               "short_name" : "95112",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "584 N 4th St, San Jose, CA 95112, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 37.3482194,
+               "lng" : -121.8946542
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.34956838029149,
+                  "lng" : -121.8933052197085
+               },
+               "southwest" : {
+                  "lat" : 37.34687041970849,
+                  "lng" : -121.8960031802915
+               }
+            }
+         },
+         "place_id" : "ChIJ7URouITMj4ARfk106SdmbNo",
+         "plus_code" : {
+            "compound_code" : "84X4+74 San Jose, CA, USA",
+            "global_code" : "849W84X4+74"
+         },
+         "types" : [ "street_address" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "588",
+               "short_name" : "588",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "North 4th Street",
+               "short_name" : "N 4th St",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Central San Jose",
+               "short_name" : "Central San Jose",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "95112",
+               "short_name" : "95112",
+               "types" : [ "postal_code" ]
+            },
+            {
+               "long_name" : "5311",
+               "short_name" : "5311",
+               "types" : [ "postal_code_suffix" ]
+            }
+         ],
+         "formatted_address" : "588 N 4th St, San Jose, CA 95112, USA",
+         "geometry" : {
+            "location" : {
+               "lat" : 37.3482051,
+               "lng" : -121.8947787
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.3495540802915,
+                  "lng" : -121.8934297197085
+               },
+               "southwest" : {
+                  "lat" : 37.34685611970851,
+                  "lng" : -121.8961276802915
+               }
+            }
+         },
+         "place_id" : "ChIJ5WLtuITMj4ARzmmcC3d93Mo",
+         "plus_code" : {
+            "compound_code" : "84X4+73 San Jose, CA, USA",
+            "global_code" : "849W84X4+73"
+         },
+         "types" : [ "establishment", "point_of_interest" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "588",
+               "short_name" : "588",
+               "types" : [ "street_number" ]
+            },
+            {
+               "long_name" : "North 4th Street",
+               "short_name" : "N 4th St",
+               "types" : [ "route" ]
+            },
+            {
+               "long_name" : "Central San Jose",
+               "short_name" : "Central San Jose",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "95112",
+               "short_name" : "95112",
+               "types" : [ "postal_code" ]
+            },
+            {
+               "long_name" : "5311",
+               "short_name" : "5311",
+               "types" : [ "postal_code_suffix" ]
+            }
+         ],
+         "formatted_address" : "588 N 4th St, San Jose, CA 95112, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.3483464,
+                  "lng" : -121.894608
+               },
+               "southwest" : {
+                  "lat" : 37.3480639,
+                  "lng" : -121.8949496
+               }
+            },
+            "location" : {
+               "lat" : 37.34819359999999,
+               "lng" : -121.8948153
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.34955413029149,
+                  "lng" : -121.8934298197085
+               },
+               "southwest" : {
+                  "lat" : 37.3468561697085,
+                  "lng" : -121.8961277802915
+               }
+            }
+         },
+         "place_id" : "ChIJ9xvtuITMj4AROjhGpYFqeTg",
+         "types" : [ "premise" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "Japantown",
+               "short_name" : "Japantown",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "95112",
+               "short_name" : "95112",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "Japantown, San Jose, CA 95112, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.353117,
+                  "lng" : -121.8888339
+               },
+               "southwest" : {
+                  "lat" : 37.3448056,
+                  "lng" : -121.8989029
+               }
+            },
+            "location" : {
+               "lat" : 37.3494618,
+               "lng" : -121.8939705
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.353117,
+                  "lng" : -121.8888339
+               },
+               "southwest" : {
+                  "lat" : 37.3448056,
+                  "lng" : -121.8989029
+               }
+            }
+         },
+         "place_id" : "ChIJzcQR0IPMj4ARssG9NdP7_qU",
+         "types" : [ "neighborhood", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "95112",
+               "short_name" : "95112",
+               "types" : [ "postal_code" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "San Jose, CA 95112, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.3834109,
+                  "lng" : -121.8450339
+               },
+               "southwest" : {
+                  "lat" : 37.3034849,
+                  "lng" : -121.9193939
+               }
+            },
+            "location" : {
+               "lat" : 37.3456227,
+               "lng" : -121.8847222
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.3834109,
+                  "lng" : -121.8450339
+               },
+               "southwest" : {
+                  "lat" : 37.3034849,
+                  "lng" : -121.9193939
+               }
+            }
+         },
+         "place_id" : "ChIJeTX-s5XMj4ARpd08-2y8v5w",
+         "types" : [ "postal_code" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "Central San Jose",
+               "short_name" : "Central San Jose",
+               "types" : [ "neighborhood", "political" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "Central San Jose, San Jose, CA, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.3647971,
+                  "lng" : -121.849536
+               },
+               "southwest" : {
+                  "lat" : 37.2759069,
+                  "lng" : -121.9595461
+               }
+            },
+            "location" : {
+               "lat" : 37.3325859,
+               "lng" : -121.8961047
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.3647971,
+                  "lng" : -121.849536
+               },
+               "southwest" : {
+                  "lat" : 37.2759069,
+                  "lng" : -121.9595461
+               }
+            }
+         },
+         "place_id" : "ChIJtYoUX2DLj4ARKoKOb1G0CpM",
+         "types" : [ "neighborhood", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "San Jose, CA, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.4692304,
+                  "lng" : -121.589154
+               },
+               "southwest" : {
+                  "lat" : 37.124493,
+                  "lng" : -122.0456719
+               }
+            },
+            "location" : {
+               "lat" : 37.3382082,
+               "lng" : -121.8863286
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.4692304,
+                  "lng" : -121.589154
+               },
+               "southwest" : {
+                  "lat" : 37.124493,
+                  "lng" : -122.0456719
+               }
+            }
+         },
+         "place_id" : "ChIJ9T_5iuTKj4ARe3GfygqMnbk",
+         "types" : [ "locality", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "Santa Clara County, CA, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.484637,
+                  "lng" : -121.208178
+               },
+               "southwest" : {
+                  "lat" : 36.8941549,
+                  "lng" : -122.202476
+               }
+            },
+            "location" : {
+               "lat" : 37.3336581,
+               "lng" : -121.8907041
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.484637,
+                  "lng" : -121.208178
+               },
+               "southwest" : {
+                  "lat" : 36.8941549,
+                  "lng" : -122.202476
+               }
+            }
+         },
+         "place_id" : "ChIJd_Y0eVIvkIARuQyDN0F1LBA",
+         "types" : [ "administrative_area_level_2", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "California, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 42.0095169,
+                  "lng" : -114.131211
+               },
+               "southwest" : {
+                  "lat" : 32.528832,
+                  "lng" : -124.482003
+               }
+            },
+            "location" : {
+               "lat" : 36.778261,
+               "lng" : -119.4179324
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 42.0095169,
+                  "lng" : -114.131211
+               },
+               "southwest" : {
+                  "lat" : 32.528832,
+                  "lng" : -124.482003
+               }
+            }
+         },
+         "place_id" : "ChIJPV4oX_65j4ARVW8IJ6IJUYs",
+         "types" : [ "administrative_area_level_1", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "United States",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 71.5388001,
+                  "lng" : -66.885417
+               },
+               "southwest" : {
+                  "lat" : 18.7763,
+                  "lng" : 170.5957
+               }
+            },
+            "location" : {
+               "lat" : 37.09024,
+               "lng" : -95.712891
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 71.5388001,
+                  "lng" : -66.885417
+               },
+               "southwest" : {
+                  "lat" : 18.7763,
+                  "lng" : 170.5957
+               }
+            }
+         },
+         "place_id" : "ChIJCzYy5IS16lQRQrfeQ5K5Oxw",
+         "types" : [ "country", "political" ]
+      },
+      {
+         "address_components" : [
+            {
+               "long_name" : "84X4+84",
+               "short_name" : "84X4+84",
+               "types" : [ "plus_code" ]
+            },
+            {
+               "long_name" : "San Jose",
+               "short_name" : "San Jose",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Santa Clara County",
+               "short_name" : "Santa Clara County",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "California",
+               "short_name" : "CA",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            }
+         ],
+         "formatted_address" : "84X4+84 San Jose, CA, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 37.348375,
+                  "lng" : -121.894625
+               },
+               "southwest" : {
+                  "lat" : 37.34825,
+                  "lng" : -121.89475
+               }
+            },
+            "location" : {
+               "lat" : 37.3483,
+               "lng" : -121.8947
+            },
+            "location_type" : "ROOFTOP",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 37.34966148029149,
+                  "lng" : -121.8933385197085
+               },
+               "southwest" : {
+                  "lat" : 37.3469635197085,
+                  "lng" : -121.8960364802915
+               }
+            }
+         },
+         "place_id" : "GhIJMZkqGJWsQkARze7Jw0J5XsA",
+         "plus_code" : {
+            "compound_code" : "84X4+84 San Jose, CA, USA",
+            "global_code" : "849W84X4+84"
+         },
+         "types" : [ "plus_code" ]
+      }
+   ],
+   "status" : "OK"
+}
