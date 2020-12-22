@@ -8,7 +8,8 @@ import 'package:dima_nabatov_rozov/Screens/components/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fit_kit/fit_kit.dart';
-
+import 'package:activity_recognition_flutter/activity_recognition_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Body extends StatelessWidget {
   const Body({
@@ -44,7 +45,7 @@ class Body extends StatelessWidget {
           RoundedButton(
             text: "LOGIN",
             press: () {
-              hasPermissions();
+              
               /*Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => GoogleFitInstance()),  

@@ -34,6 +34,16 @@ dependencies:
   cupertino_icons: ^1.0.0
   flutter_svg: ^0.19.1
   fit_kit:
+  permission_handler: ^5.0.1+1
+  activity_recognition_flutter: ^2.0.2
+  google_sign_in: ^3.2.4
+
+  firebase_core: ^0.5.3
+  firebase_analytics: ^6.3.0
+  firebase_auth: ^0.18.4+1
+  cloud_firestore: ^0.14.4
+
+  rxdart: 0.20.0
 
 dev_dependencies:
   flutter_test:
