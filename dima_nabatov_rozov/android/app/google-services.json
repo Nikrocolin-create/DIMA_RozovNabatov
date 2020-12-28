@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "216996885933",
+    "project_id": "clean-air-299816",
+    "storage_bucket": "clean-air-299816.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216996885933:android:fd79dc2dfd53affeed5d24",
+        "android_client_info": {
+          "package_name": "com.example.dima_nabatov_rozov"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216996885933-g567hp0ntnaqp513r2dege65caok2euc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dima_nabatov_rozov",
+            "certificate_hash": "824177e08ca81c5960f08f7910aa53e36689fd07"
+          }
+        },
+        {
+          "client_id": "216996885933-8u8397visji5kcp71eq8io2u1qmmuf3p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTzK2H14dkdYWriuENgLwHEiCfeYSNyUE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216996885933-8u8397visji5kcp71eq8io2u1qmmuf3p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

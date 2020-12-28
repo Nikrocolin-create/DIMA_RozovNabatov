@@ -1,5 +1,5 @@
-name: dima_nabatov_rozov
-description: A new Flutter application.
+name: sign_in_flutter
+description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -20,34 +20,14 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
-
 dependencies:
   flutter:
     sdk: flutter
-  flutter_map:
-  location:
-  http:
-  geolocator: ^5.0.0
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
-  flutter_svg: ^0.19.1
-  fit_kit:
-  permission_handler: ^5.0.1+1
-  activity_recognition_flutter: ^2.0.2
-  google_sign_in: ^4.0.4
-
-  #firebase_core: ^0.5.0
-  #firebase_analytics: ^6.2.0
-  firebase_auth: ^0.11.1+8
-  #cloud_firestore: ^0.14.4
-  #firebase_database: ^4.3.0
-  #firebase_messaging: ^8.0.0-dev.8
-  #firebase_crashlytics: ^0.2.3
-
-
-  #rxdart: 0.20.0
 
 dev_dependencies:
   flutter_test:
@@ -64,9 +44,6 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  assets:
-    - assets/images/
-    - assets/icons/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

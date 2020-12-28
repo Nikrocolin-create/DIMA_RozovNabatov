@@ -45,12 +45,8 @@ class Body extends StatelessWidget {
           RoundedButton(
             text: "LOGIN",
             press: () {
-              
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => GoogleFitInstance()),  
-              );*/
             },
+            image: Image(image: AssetImage("assets/icons/google-logo.png"), height: 25.0),
           ),
           SignUp(
             press: () {},
