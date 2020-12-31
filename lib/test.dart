@@ -1,20 +1,32 @@
 import 'dart:async';
 import "dart:convert";
+import 'package:bending_spoons/ListOfRoutes.dart';
+import 'package:bending_spoons/location_pollution.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 import 'package:bending_spoons/db.dart';
-import 'package:bending_spoons/db.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'Pages.dart';
 
 String API_KEY = "AIzaSyBOupgrKvCmQn5B3a3Vjn6WgG7FrpNU8f0";
+
+
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
 
   await DB.init();
-  return runApp(MyApp());
+  var num = 1;
+  Lister lm = Lister(number: 1); // правильный синтакси
+  runApp(MaterialApp(
+      initialRoute: '/',
+      routes: {
+        '/':(BuildContext context) => MyApp(),
+        '/my routes': (context) => PathList(),
+      }
+  ));
 }
 
 class ResponseParameters {
@@ -40,69 +52,41 @@ class ResponseParameters {
     }
   }
 
-  double polution_value(String name) {
-    double sum;
+  Map<dynamic,dynamic> get map_polution { //[{parameter: co, count: 29197}, {parameter: no2, count: 28513}, {parameter: o3, count: 30910}, {parameter: pm25, count: 31928}]
+    Map<dynamic,dynamic> map = {};
     for (var l in params) {
-      for (var item in l.entries) {
-        if (item.key == name) sum += item.value;
-      }
+      map[l['parameter'].toString()] = l['count'];
     }
-    return sum;
+    return map;
   }
 }
 
 Future<List<dynamic>> use_future(String url) async {
   //оборачиваем асинхр. функцию для вызова
   List<dynamic> list_responses = [];
-  dynamic value = await get_res(url);
-  for (int i = 0; i < value.length; i++) {
-    ResponseParameters l = ResponseParameters(
-        value[i]['coordinates']['latitude'],
-        value[i]['coordinates']['longitude'],
-        value[i]['countsByMeasurement']);
-    list_responses.add(l);
-    print(value[i]['coordinates']['latitude']);
-    print(value[i]['coordinates']['longitude']);
-    print(value[i]['countsByMeasurement'].runtimeType);
-  }
-  print("Lensize ${list_responses.length}");
-  return list_responses;
-}
-
-//"https://www.myurl.com/api/v1/test/123/?param1=one&param2=two";
-Future<List<dynamic>> get_res(url) async {
-  //асинхронная функция для работы с api
   var response = await http.get(url);
   print(response.statusCode);
   if (response.statusCode == 200) {
-    var to_parse = json.decode(response.body)['results']; //будущий парсер json
-    print(to_parse);
-    return to_parse;
+    var value = json.decode(response.body)['results']; //будущий парсер json
+    print(value);
+    for (int i = 0; i < value.length; i++) {
+      ResponseParameters l = ResponseParameters(
+          value[i]['coordinates']['latitude'],
+          value[i]['coordinates']['longitude'],
+          value[i]['countsByMeasurement']);
+      list_responses.add(l);
+    }
+    return list_responses;
   }
 }
 
-Future<dynamic> get_reg(url) async {
-  //асинхронная функция для работы с api
-  var response = await http.get(url);
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    var to_parse = json.decode(response.body); //будущий парсер json
-    print(to_parse);
-    return to_parse;
-  }
-}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'TMS Client',
-      theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-      ),
-      home: HomePage(), //Через column не запихивается
-    );
+  Widget build(BuildContext context) { //должен быть только один materialApp и стоять в начале на route
+    return HomePage(); //Через column не запихивается
+
   }
 }
 
@@ -115,28 +99,58 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // здесь начинается магия
+  bool action = false;
+  int path_id;
   Marker _marker;
   bool start_run;
   Timer _timer;
-  dynamic _district;
+  List<LocationPollution> pol_path = [];
   List<dynamic> list_responses;
   Geolocator _geolocator;
   Position _position;
+  var points = <LatLng>[
+    LatLng(37.78493, -122.42932),
+    LatLng(37.78693, -122.41942),
+    LatLng(37.78923, -122.41542),
+    LatLng(37.78923, -122.42582),
+  ];
 
+
+  void get_max_id() async {
+    List<dynamic> newList;
+
+    newList = await DB.max_query();
+    print(newList);
+    setState(() {
+      path_id = newList.last['max(path)'];
+    });
+  }
   void updateLocation() async {
     //функция для обновления локации (ваш кеп)
-    print("!");
     try {
       Position newPosition = await Geolocator()
           .getCurrentPosition()
           .timeout(new Duration(seconds: 5));
-      print("coordinates=${newPosition.latitude},${newPosition.longitude}");
-      //List<dynamic> newList = await use_future("https://api.openaq.org/v1/locations/?coordinates=${newPosition.latitude},${newPosition.longitude}&order_by=distance");;
-      //dynamic new_district = await get_reg("https://maps.googleapis.com/maps/api/geocode/json?latlng=${newPosition.latitude},${newPosition.longitude}&key=${API_KEY},&sensor=false");
+
+      List<dynamic> newList;
+      if (!start_run)  {
+        newList = await use_future("https://api.openaq.org/v1/locations/"
+            "?coordinates=${newPosition.latitude},${newPosition.longitude}&radius=20000&order_by=distance");
+        pol_path.add(LocationPollution(
+          path: path_id, // написать метод который при выборе начать находит в бд максимальный номер и увеличивает его на 1
+          latitude: newPosition.latitude,
+          longitude: newPosition.longitude,
+          o3 : newList[0].map_polution['o3'],
+          pm25: newList[0].map_polution['pm25'],
+          co: newList[0].map_polution['co'],
+          no2: newList[0].map_polution['no2'],
+        ));
+      }
+
       setState(() {
-        //_district = new_district;
         _position = newPosition;
-        //list_responses = newList;
+        if (newList!=null)
+          list_responses = newList;
       });
     } catch (e) {
       print('Error: ${e.toString()}');
@@ -148,9 +162,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     start_run = true;
     _geolocator = Geolocator();
-    updateLocation();
+
     _timer = Timer.periodic(Duration(seconds: 10), (_) {
       //обновление состояния по таймеру
+      updateLocation();
+      get_max_id();
       setState(() {
         _marker = Marker(
           //
@@ -181,7 +197,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         key: _scaffoldKey,
         // Попытался загнать карту через column, опять пошел нахуй, хотя через container норм, нужно ебашить column->expanded->map
-        appBar: new AppBar(title: new Text("Карта")),
+        appBar: new AppBar(title: new Text("Map"),
+          actions: [
+            PopupMenuButton(
+              onSelected: (String choice) {
+                if (choice == "my routes")
+                  Navigator.pushNamed(context, '/my routes');
+              },
+              itemBuilder: (BuildContext context){
+                return Pages.choices.map((String choice){
+                  return PopupMenuItem(
+                    value: choice,
+                    child: Text(choice),
+                  );
+                }).toList();
+              },
+            )
+          ],),
         body: Column(
           children: [
             Expanded(
@@ -208,7 +240,20 @@ class _HomePageState extends State<HomePage> {
                           borderColor: Colors.red,
                           radius: 100 //radius
                       )
-                    ])
+                    ]),
+                    PolylineLayerOptions(
+                      polylines: [
+                        Polyline(
+                          points: points,
+                          strokeWidth: 4.0,
+                          gradientColors: [
+                            Color(0xffE40203),
+                            Color(0xffFEED00),
+                            Color(0xff007E2D),
+                          ],
+                        ),
+                      ],
+                    ),
                   ],
                 )),
             Expanded(
@@ -221,16 +266,21 @@ class _HomePageState extends State<HomePage> {
                         start_run = !start_run;
                       });
                       if (start_run) {
-                        bool value = await Navigator.push(context, PageRouteBuilder(
-                            opaque: false,
-                            pageBuilder: (BuildContext context, _, __) => MyPopup(),
-                            transitionsBuilder: (___, Animation<double> animation, ____, Widget child) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: ScaleTransition(scale: animation, child: child),
-                              );
-                            }
-                        ));}},
+                        action = await _asyncConfirmDialog(context);
+                        if (action) {
+                          setState(() {
+                            path_id += 1;
+                          });
+                          for (LocationPollution item in pol_path) {
+                            await DB.insert('location_polution', item);
+                          }
+                          print('Id has changed');
+                          print(path_id);
+                          action = false;
+                          pol_path.clear(); //очищаем проделанный путь
+                        }
+                      }
+                    },
                     child: (start_run) ? Text('Start') : Text('Stop'),
                     color: (start_run) ? Colors.blue : Colors.red,
                     textColor: Colors.white,
@@ -241,77 +291,36 @@ class _HomePageState extends State<HomePage> {
   }
 
   Color method_for_color() {
-    print("counting...${_district.runtimeType}");
     return Colors.red.withOpacity(0.5);
   }
 }
 
-Dialog leadDialog = Dialog(
-  child: Container(
-    height: 300.0,
-    width: 360.0,
-    color: Colors.white,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Text(
-            'Save your route?',
-            style: TextStyle(color: Colors.black, fontSize: 22.0),
+Future _asyncConfirmDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    barrierDismissible: false, // user must tap button for close dialog!
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Save the route?'),
+        content: const Text(
+            'You can watch it after'),
+        actions: [
+          FlatButton(
+            child: const Text('No'),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Text(
-            'Save your route?',
-            style: TextStyle(color: Colors.black, fontSize: 22.0),
-          ),
-        ),
-        Expanded(
-            flex: 1,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    onPressed: (){},
-                    child: Text('Yes'),
-                    color:  Colors.blue,
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: RaisedButton(
-                    onPressed: (){
-                    },
-                    child: Text('No'),
-                    color:  Colors.red,
-                  ),
-                ),
-              ],
-            )
-        ),
-      ],
-    ),
-  ),
-);
-
-class MyPopup extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Save the route?:'),
-      actions: [
-        FlatButton(
-          onPressed: () {Navigator.pop(context,true);},
-          child: Text('Yes'),
-        ),
-        FlatButton(
-          onPressed: () {Navigator.pop(context,false);},
-          child: Text('No'),
-        ),
-      ],
-    );
-  }
+          FlatButton(
+            child: const Text('Yes'),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          )
+        ],
+      );
+    },
+  );
 }
+
+
