@@ -3,7 +3,7 @@ import 'package:dima_nabatov_rozov/Screens/components/background.dart';
 import 'package:dima_nabatov_rozov/Screens/components/rounded_button.dart';
 import 'package:dima_nabatov_rozov/busLogic/FIT%20API/auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 
 class BodyLogin extends StatefulWidget {
@@ -16,27 +16,25 @@ class _BodyPageState extends State<BodyLogin> {
   bool _initialized = false;
   bool _error = false;
 
-  /*void initializeFlutterFire() async {
-    try {
+  void initializeFlutterFire() async {
+  //  try {
       // Wait for Firebase to initialize and set `_initialized` state to true
       await Firebase.initializeApp();
       setState(() {
         _initialized = true;
       });
-    } catch(e) {
+   // } catch(e) {
       // Set `_error` state to true if Firebase initialization fails
-      setState(() {
-        _error = true;
-      });
+   //   setState(() {
+   //     _error = true;
+     // });
     }
-
-  }
 
   @override
   void initState() {
     initializeFlutterFire();
     super.initState();
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +55,7 @@ class _BodyPageState extends State<BodyLogin> {
               RoundedButton(
                 text: "Sign In With Google Fit",
                 press: () { 
-                  if (_initialized == false) {
+                  if (_initialized == true) {
                     AuthService auth = new AuthService();
 
                     auth.googleSignIn().then((result) {

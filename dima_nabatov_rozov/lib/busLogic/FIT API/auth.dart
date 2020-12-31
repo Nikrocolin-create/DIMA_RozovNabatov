@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class AuthService {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: <String>[
+   /* scopes: <String>[
       'email'
       'https://www.googleapis.com/auth/fitness.activity.read'
       'https://www.googleapis.com/auth/fitness.activity.write',
@@ -15,7 +15,7 @@ class AuthService {
       'https://www.googleapis.com/auth/fitness.body.write	',
       'https://www.googleapis.com/auth/fitness.location.read',
       'https://www.googleapis.com/auth/fitness.location.write'
-    ]
+    ]*/
   );
   final FirebaseAuth _auth = FirebaseAuth.instance;
   
@@ -26,27 +26,34 @@ class AuthService {
 
     // sign in with google
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    // pass it to the firebase
+    if (googleUser != null) {
+      return 'null user';
+    } else {
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    AuthCredential authCredential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken
-    );
+      // pass it to the firebase
 
-    final FirebaseUser user = await _auth.signInWithCredential(authCredential);
+      AuthCredential authCredential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(authCredential);
+      return 'signInWithGoogle succeeded';
+    }
+
+    //final FirebaseUser user = await _auth.signInWithCredential(authCredential);
     //final FirebaseUser user = authResult.user;
 
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
+    //assert(!user.isAnonymous);
+    //assert(await user.getIdToken() != null);
 
-    final FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-
-    return 'signInWithGoogle succeeded: $user';
+    //final FirebaseUser currentUser = await _auth.currentUser();
+    //assert(user.uid == currentUser.uid);
   }
 
   Future<void> signOut() async {
-    await _googleSignIn.signOut();
+    await _googleSignIn.disconnect();
+    FirebaseAuth.instance.signOut();
   }
 }

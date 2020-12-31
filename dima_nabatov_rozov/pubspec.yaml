@@ -36,11 +36,11 @@ dependencies:
   fit_kit:
   permission_handler: ^5.0.1+1
   activity_recognition_flutter: ^2.0.2
-  google_sign_in: ^4.0.4
+  google_sign_in: ^4.5.6
 
-  #firebase_core: ^0.5.0
+  firebase_core: ^0.5.0
   #firebase_analytics: ^6.2.0
-  firebase_auth: ^0.11.1+8
+  firebase_auth: ^0.18.3
   #cloud_firestore: ^0.14.4
   #firebase_database: ^4.3.0
   #firebase_messaging: ^8.0.0-dev.8
