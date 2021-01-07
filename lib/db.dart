@@ -42,7 +42,7 @@ abstract class DB {
       await _db.delete(table, where: 'id = ?', whereArgs: [model.id]);
 
   static Future<List<Map<String, dynamic>>> time_query() async {
-    return _db.rawQuery('SELECT path, max(measure_time) FROM location_pollution GROUP BY path');
+    return _db.rawQuery('SELECT path, max(measure_time), min(measure_time) FROM location_pollution GROUP BY path');
   }
 
   static Future<List<Map<String, dynamic>>> path_query(int path) async {

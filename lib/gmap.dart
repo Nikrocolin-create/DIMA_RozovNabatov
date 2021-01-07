@@ -91,8 +91,7 @@ class GMapState extends State<GMap> {
   String googleAPIKey = "AIzaSyBOupgrKvCmQn5B3a3Vjn6WgG7FrpNU8f0";
   BitmapDescriptor sourceIcon; // for my custom marker pins
   BitmapDescriptor destinationIcon;
-  LocationData
-      currentLocation; // the user's initial location and current location as it moves
+  LocationData currentLocation; // the user's initial location and current location as it moves
   LocationData destinationLocation; // a reference to the destination location
   Location location; // wrapper around the location API
   @override
@@ -133,37 +132,42 @@ class GMapState extends State<GMap> {
 
   void get_pollution() async {
     reduce_calls++;
-    if (!start_run && (reduce_calls % 5 == 0)) {
+    print(reduce_calls);
+    print(start_run);
+    if (!start_run && (reduce_calls % 2 == 0)) {
       List<dynamic> newList;
       try{
+        print("coordinates=${currentLocation.latitude},${currentLocation.longitude}");
         newList = await use_future(
-          "https://api.openaq.org/v1/locations/"
-              "?coordinates=${currentLocation.latitude},${currentLocation.longitude}&radius=20000&order_by=distance");
-          if(newList == null)
-            throw("No response");
-          else
+            "https://api.openaq.org/v1/locations/?coordinates=${currentLocation.latitude},${currentLocation.longitude}&radius=20000&order_by=distance");
+        if(newList == null)
+          throw("No response");
+        else {
             cached_pollution = newList;
+            pol_path.add(LocationPollution(
+            path: path_id,
+            latitude: currentLocation.latitude+0.0001*reduce_calls,
+            longitude: currentLocation.longitude+0.0001*reduce_calls,
+            o3: newList[0].map_pollution['o3'],
+            pm25: newList[0].map_pollution['pm25'],
+            co: newList[0].map_pollution['co'],
+            no2: newList[0].map_pollution['no2'],
+          ));
+        }
       } catch(e) {
         print("AQ Server is unavailable");
         newList = cached_pollution;
       }
-
-      pol_path.add(LocationPollution(
-        path: path_id,
-        latitude: currentLocation.latitude+0.0001*reduce_calls,
-        longitude: currentLocation.longitude+0.0001*reduce_calls,
-        o3: newList[0].map_pollution['o3'],
-        pm25: newList[0].map_pollution['pm25'],
-        co: newList[0].map_pollution['co'],
-        no2: newList[0].map_pollution['no2'],
-      ));
+      polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
+      print(polylineCoordinates);
     }
-    polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
-    print(polylineCoordinates);
+
   }
 
   Color setCircleColor(){
     print("setting a color");
+    if (pol_path.isEmpty)
+      return Colors.white;
     if (pol_path.last.pm25 > 30000) {
       return Colors.amber;
     } else
@@ -182,12 +186,6 @@ class GMapState extends State<GMap> {
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
     currentLocation = await location.getLocation();
-
-    // hard-coded destination for this example
-    destinationLocation = LocationData.fromMap({
-      "latitude": DEST_LOCATION.latitude,
-      "longitude": DEST_LOCATION.longitude
-    });
   }
 
   @override
@@ -282,41 +280,22 @@ class GMapState extends State<GMap> {
   }
 
   void showPinsOnMap() {
-    // get a LatLng for the source location
-    // from the LocationData currentLocation object
-    var pinPosition =
-        LatLng(currentLocation.latitude, currentLocation.longitude);
-    // get a LatLng out of the LocationData object
-    var destPosition =
-        LatLng(destinationLocation.latitude, destinationLocation.longitude);
-    // add the initial source location pin
-    _markers.add(Marker(
-        markerId: MarkerId('sourcePin'),
-        position: pinPosition,
-        icon: sourceIcon));
-    // destination pin
-    _markers.add(Marker(
-        markerId: MarkerId('destPin'),
-        position: destPosition,
-        icon: destinationIcon));
-    // set the route lines on the map from source to destination
-    // for more info follow this tutorial
     print("Setting polylines\n");
     setPolylines();
     setCircles();
   }
 
   void setPolylines() async {
-      setState(() {
-        _polylines.clear();
-        print("adding a polyline");
-        _polylines.add(Polyline(
-            width: 5, // set the width of the polylines
-            polylineId: PolylineId("poly"),
-            color: Colors.red,
-            points: polylineCoordinates));
-      });
-    }
+    setState(() {
+      _polylines.clear();
+      print("adding a polyline");
+      _polylines.add(Polyline(
+          width: 5, // set the width of the polylines
+          polylineId: PolylineId("poly"),
+          color: Colors.red,
+          points: polylineCoordinates));
+    });
+  }
 
   void setCircles() async {
     setState(() {
@@ -327,11 +306,12 @@ class GMapState extends State<GMap> {
         Circle(
             circleId: CircleId("circle"),
             center: LatLng(currentLocation.latitude,currentLocation.longitude),
-            radius: 1000,
-            strokeWidth: 10,
-            fillColor: setCircleColor()),
+            radius: 100,
+            strokeWidth: 5,
+            strokeColor: setCircleColor(),
+            fillColor: setCircleColor().withOpacity(0.5)),
       );
-  });
+    });
   }
 
   void updatePinOnMap() async {
@@ -351,7 +331,7 @@ class GMapState extends State<GMap> {
     setState(() {
       // updated position
       var pinPosition =
-          LatLng(currentLocation.latitude, currentLocation.longitude);
+      LatLng(currentLocation.latitude, currentLocation.longitude);
 
       // the trick is to remove the marker (by id)
       // and add it again at the updated location

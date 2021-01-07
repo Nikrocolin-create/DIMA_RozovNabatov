@@ -36,10 +36,12 @@ class RouteState extends State<RouteShower> {
   }
 
   void setRoute() async {
+    print("Route");
     var smt = await DB.path_query(int.parse(id));
     for (var item in smt) {
       //могу в асинхронной написать сетстейт
       print(no2.runtimeType);
+      print(item['co']);
       co += item['co']; no2+=item['no2']; pm25+=item['pm25']; o3=item['o3'];
       polylineCoordinates.add(LatLng(
           item['latitude'],

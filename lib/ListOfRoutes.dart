@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:bending_spoons/Pages.dart';
-
+import "package:latlong/latlong.dart";
 import 'ShowRoute.dart';
 import 'db.dart';
 
@@ -16,42 +16,57 @@ class PathList extends StatefulWidget {
 }
 
 class _PathListState extends State {
-  Lister list = Lister(number: 1);
-  List<Text> query;///не сработало добавление в инит стейт
+  List<dynamic> query;
+  List<dynamic> query_for_distance;
+  final Distance distance = new Distance();
+
+  ///не сработало добавление в инит стейт
+  Map<dynamic, dynamic> distances;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    query=[];
+    distances = Map<dynamic, dynamic>();
+    query = [];
     update_list();
   }
 
-  void update_list() async {
-    List <Text> query1;
-    try {
-      print("HERE");
-      query1 = await list.get_map();
-    } catch (e) {};
-    setState(() {
-      print(query1);
-      query = query1;
-      print(query);
-    });
-  }
+  Future<void> update_list() async {
+    query = await DB.time_query();
+    print(query);
+    print("query");
+    var prom_dist;
+    for (var item in query) {
+      print("item: ${item}");
+      prom_dist = 0;
+      query_for_distance = await DB.path_query(item['path']);
+      print('Query: ${query_for_distance}');
+      int i;
+      if (query_for_distance.length > 1)
+        for (i = 1; i < query_for_distance.length; i++) {
+           prom_dist += distance(
+               LatLng(query_for_distance[i-1]["latitude"], query_for_distance[i-1]["longitude"]),
+               LatLng(query_for_distance[i]["latitude"], query_for_distance[i]["longitude"]),
+           );
+        }
+      distances[item['path']] = prom_dist;
+      print(distances[item['path']]);
+    }
+}
 
   @override
   Widget build(BuildContext context) {
     final _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
-        appBar: new AppBar(title: new Text("My routes"),
+        appBar: new AppBar(
+          title: new Text("My routes"),
           actions: [
             PopupMenuButton(
               onSelected: (String choice) {
                 if (choice == "/")
                   Navigator.pushNamed(context, '/');
-                else if (choice == "/map")
-                  Navigator.pushNamed(context, '/map');
+                else if (choice == "/map") Navigator.pushNamed(context, '/map');
               },
               itemBuilder: (BuildContext context) {
                 return Pages.choices.map((String choice) {
@@ -62,111 +77,97 @@ class _PathListState extends State {
                 }).toList();
               },
             )
-          ],),
-        body: new ListView.builder(
-          itemCount: query.length,
-          // Provide a builder function. This is where the magic happens.
-          // Convert each item into a widget based on the type of item it is.
-          itemBuilder: (context, index) {
-            final item = query[index];
-            return InfoBlock(query[index].data);
-          },)
+          ],
+        ),
+        body:  FutureBuilder<dynamic>(
+            future: update_list(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.none:
+                  return Text('Uninitialized');
+                case ConnectionState.active:
+                case ConnectionState.waiting:
+                  return Text('Awaiting result...');
+                case ConnectionState.done:
+                  if (snapshot.hasError) throw snapshot.error;
+                  return  new ListView.builder(
+                    itemCount: query.length,
+                    // Provide a builder function. This is where the magic happens.
+                    // Convert each item into a widget based on the type of item it is.
+                    itemBuilder: (context, index) {
+                      final item = query[index];
+                      print(distances);
+                      return InfoBlock(query[index],distances[query[index]["path"]]);
+                    },
+                  );
+              }
+            }));
+  }
+}
+
+class InfoBlock extends StatelessWidget {
+  var tuple;
+  var distance;
+
+  InfoBlock(var resp, var dist) {
+    tuple = resp;
+    distance= dist;
+    print(tuple);
+  }
+
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print(tuple['path']);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RouteShower(tuple['path'].toString()),
+            ));
+      },
+      child: Container(
+        height: 48.0,
+        child: Row(
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                alignment: Alignment.center,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                child: Text(
+                  tuple["min(measure_time)"].toString(),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                alignment: Alignment.center,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                child: Text(
+                  tuple["max(measure_time)"].toString(),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                alignment: Alignment.center,
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                child: Text(
+                  "${distance} m",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
-
-class Lister {
-  List<Text> query = [];
-  var number = 0;
-  Lister({this.number});
-  Future<List<Text>> get_map() async {
-    List<dynamic> l = await DB.time_query();
-    print(await DB.time_query());
-    print(l.length);
-    for (var node in l) {
-      query.add(Text(node.toString()));
-      print(query);
-    }
-    return query;
-  }
-}
-
-class InfoBlock extends StatelessWidget{
-  var res_que;
-  String date='';
-  String id='';
-
-  InfoBlock(String resp){
-    var i=0;
-    var flag = 0;
-    while (i < resp.length) {
-      if (resp[i] == " " && resp[i-1]== ":") {
-        flag++;
-      }
-      if (flag == 1 && resp.codeUnitAt(i) >= '0'.codeUnitAt(0) && resp.codeUnitAt(i) <= '9'.codeUnitAt(0)){
-        id += resp[i];
-      }
-      if (flag == 2 && resp[i]!='}'){
-        date += resp[i];
-      }
-      i++;
-      print(id);
-      print(date);
-    }
-  }
-
-  Widget build(BuildContext context){
-    return GestureDetector(
-        onTap: (){
-          print(id);
-          Navigator.push(context,
-              MaterialPageRoute(
-              builder: (context) => RouteShower(id),
-          ));
-    },
-    child: Container(
-      height: 48.0,
-      child: Row(
-        children: [
-          Expanded(
-          flex: 1,
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.blueAccent)
-            ),
-            child: Text(id,style: TextStyle(fontSize: 14),),),
-      ),
-          Expanded(
-            flex: 3,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent)
-              ),
-              child: Text(date,style: TextStyle(fontSize: 14),),),
-          ),
-          Expanded(
-            flex: 2,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent)
-              ),
-              child: Text("km",style: TextStyle(fontSize: 14),),),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blueAccent)
-              ),
-              child: Text("del",style: TextStyle(fontSize: 14),),),
-    ),
-        ],
-      ),
-    ),);
-  }
-}
-
