@@ -11,6 +11,7 @@ import 'Pages.dart';
 import 'package:bending_spoons/main.dart';
 import 'package:bending_spoons/db.dart';
 import 'package:http/http.dart' as http;
+import 'color_return.dart';
 
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 0;
@@ -131,18 +132,14 @@ class GMapState extends State<GMap> {
   }
 
   void get_pollution() async {
+
     reduce_calls++;
-    print(reduce_calls);
-    print(start_run);
     if (!start_run && (reduce_calls % 2 == 0)) {
       List<dynamic> newList;
       try{
         print("coordinates=${currentLocation.latitude},${currentLocation.longitude}");
         newList = await use_future(
             "https://api.openaq.org/v1/locations/?coordinates=${currentLocation.latitude},${currentLocation.longitude}&radius=20000&order_by=distance");
-        if(newList == null)
-          throw("No response");
-        else {
             cached_pollution = newList;
             pol_path.add(LocationPollution(
             path: path_id,
@@ -153,10 +150,30 @@ class GMapState extends State<GMap> {
             co: newList[0].map_pollution['co'],
             no2: newList[0].map_pollution['no2'],
           ));
-        }
       } catch(e) {
         print("AQ Server is unavailable");
+        print(e.toString());
         newList = cached_pollution;
+        if (cached_pollution == null)
+          pol_path.add(LocationPollution(
+          path: path_id,
+          latitude: currentLocation.latitude+0.0001*reduce_calls,
+          longitude: currentLocation.longitude+0.0001*reduce_calls,
+          o3: 0,
+          pm25: 0,
+          co: 0,
+          no2: 0,
+        ));
+        else
+          pol_path.add(LocationPollution(
+            path: path_id,
+            latitude: currentLocation.latitude+0.0001*reduce_calls,
+            longitude: currentLocation.longitude+0.0001*reduce_calls,
+            o3: newList[0].map_pollution['o3'],
+            pm25: newList[0].map_pollution['pm25'],
+            co: newList[0].map_pollution['co'],
+            no2: newList[0].map_pollution['no2'],
+          ));
       }
       polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
       print(polylineCoordinates);
@@ -168,6 +185,7 @@ class GMapState extends State<GMap> {
     print("setting a color");
     if (pol_path.isEmpty)
       return Colors.white;
+    print("Pol type:${pol_path.last.pm25.runtimeType}");
     if (pol_path.last.pm25 > 30000) {
       return Colors.amber;
     } else
