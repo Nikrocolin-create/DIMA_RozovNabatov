@@ -12,6 +12,9 @@ class MainFavorite extends StatelessWidget {
         title: Text('Favorites', style: TextStyle(color: Colors.black),),
         backgroundColor: Colors.white,
         elevation: 1.2,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
       ),
       body: Container(
         height: size.height,

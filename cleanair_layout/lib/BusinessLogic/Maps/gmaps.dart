@@ -312,6 +312,9 @@ class GMapState extends State<GMap> {
           title: Text('Maps', style: TextStyle(color: Colors.black),),
           backgroundColor: Colors.white,
           elevation: 1.2,
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
         ),
         body: Column(
           children: [
