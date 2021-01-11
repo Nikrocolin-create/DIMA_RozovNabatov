@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'BusinessLogic/database/db.dart';
 import 'Screens/main_layout.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DB.init();
@@ -20,3 +21,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

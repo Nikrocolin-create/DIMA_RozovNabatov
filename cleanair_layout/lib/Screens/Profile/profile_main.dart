@@ -1,5 +1,4 @@
 import 'package:cleanair_layout/Screens/Profile/add_elements/airpollutionwidget.dart';
-import 'package:cleanair_layout/Screens/Profile/add_elements/buttoncontrolmenu.dart';
 import 'package:cleanair_layout/Screens/Profile/add_elements/iconcontainer.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +23,7 @@ class MainMenu extends StatelessWidget {
               children: <Widget>[
                 SizedBox(height: size.height * 0.05,),
                 IconContainerMenu(),
-                SizedBox(height: size.height * 0.15,),
+                SizedBox(height: size.height * 0.18,),
                 AirPollutionWidget(size: size),
               ],
             ),

@@ -8,13 +8,17 @@ class LocationPollution extends Model {
   int path;
   double latitude;
   double longitude;
-  int o3;
-  int pm25;
-  int co;
-  int no2;
+  double o3;
+  double pm25;
+  double co;
+  double no2;
+  double no;
+  double so2;
+  double pm10;
+  double nh3;
 
   LocationPollution({ this.id, this.path, this.latitude, this.longitude,
-  this.o3, this.co, this.no2, this.pm25});
+  this.o3, this.co, this.no2, this.pm25, this.no, this.so2, this.pm10, this.nh3});
 
   Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
@@ -26,6 +30,10 @@ class LocationPollution extends Model {
       'pm25': pm25,
       'co': co,
       'no2': no2,
+      'no': no,
+      'so2': so2,
+      'pm10': pm10,
+      'nh3': nh3,
     };
 
     if (id != null) {

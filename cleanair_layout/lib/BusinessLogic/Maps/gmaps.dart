@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cleanair_layout/BusinessLogic/exceptions/503Unavailable.dart';
 import 'package:cleanair_layout/BusinessLogic/database/db.dart';
 import 'package:cleanair_layout/BusinessLogic/locationPollution/location_polution.dart';
 import 'package:cleanair_layout/constants.dart';
@@ -25,52 +26,31 @@ class GMap extends StatefulWidget {
 class ResponseParameters {
   var lat;
   var lon;
-  List<dynamic> params;
+  Map<dynamic, dynamic> params;
 
   ResponseParameters(lt, ln, par) {
     lat = lt;
     lon = ln;
     params = par;
   }
-
-  void printer() {
-    print("lat: ${lat} ");
-    print("lon: ${lon} ");
-    print("All items");
-    for (var l in params) {
-      for (var item in l.entries) {
-
-        print("${item.key} - ${item.value}");
-      }
-    }
-  }
-
-  Map<dynamic, dynamic> get map_pollution {
-    //[{parameter: co, count: 29197}, {parameter: no2, count: 28513}, {parameter: o3, count: 30910}, {parameter: pm25, count: 31928}]
-    Map<dynamic, dynamic> map = {};
-    for (var l in params) {
-      map[l['parameter'].toString()] = l['count'];
-    }
-    return map;
-  }
 }
 
-Future<List<dynamic>> use_future(String url) async {
-  //оборачиваем асинхр. функцию для вызова
-  List<dynamic> list_responses = [];
+Future<Map<dynamic, dynamic>> use_future(String url) async {
+
   var response = await http.get(url);
-  print(response.statusCode);
+
   if (response.statusCode == 200) {
-    var value = json.decode(response.body)['results']; //будущий парсер json
-    print(value);
-    for (int i = 0; i < value.length; i++) {
-      ResponseParameters l = ResponseParameters(
-          value[i]['coordinates']['latitude'],
-          value[i]['coordinates']['longitude'],
-          value[i]['countsByMeasurement']);
-      list_responses.add(l);
-    }
-    return list_responses;
+    var value = json.decode(response.body)['list']; //json parser
+    var value2 = json.decode(response.body)['coord'];
+
+    ResponseParameters l = ResponseParameters(
+        value2['lat'],
+        value2['lon'],
+        value[0]['components']
+    );
+    return l.params;
+  } else {
+    throw new ServiceUnavailableException("Service is down: ${response.statusCode}");
   }
 }
 
@@ -80,7 +60,8 @@ class GMapState extends State<GMap> {
   bool action = false;
   int path_id;
   Set<Circle> _circles = Set<Circle>();
-  List<dynamic> cached_pollution;
+  //List<dynamic> cached_pollution;
+  Map<dynamic, dynamic> cached_pollution;
   int reduce_calls=1;//уменьшить количество вызов api, счетчик
   List<LocationPollution> pol_path = [];
   Set<Marker> _markers = Set<Marker>();
@@ -143,26 +124,33 @@ class GMapState extends State<GMap> {
     
     reduce_calls++;
     if (!start_run && (reduce_calls % 2 == 0)) {
-      List<dynamic> newList;
+      Map<dynamic, dynamic> newList;
       try{
         print("coordinates=${currentLocation.latitude},${currentLocation.longitude}");
-        newList = await use_future(
-            "https://api.openaq.org/v1/locations/?coordinates=${currentLocation.latitude},${currentLocation.longitude}&radius=20000&order_by=distance");
+      
+           newList = await use_future("http://api.openweathermap.org/data/2.5/air_pollution?lat=${currentLocation.latitude}"+
+                               "&lon=${currentLocation.longitude}&appid=$cleanAirAPIKey");
+           
             cached_pollution = newList;
+
             pol_path.add(
               LocationPollution(
                 path: path_id,
                 latitude: currentLocation.latitude+0.0001*reduce_calls,
                 longitude: currentLocation.longitude+0.0001*reduce_calls,
-                o3: newList[0].map_pollution['o3'],
-                pm25: newList[0].map_pollution['pm25'],
-                co: newList[0].map_pollution['co'],
-                no2: newList[0].map_pollution['no2'],
+                o3: newList['o3'],
+                pm25: newList['pm2_5'],
+                co: newList['co'],
+                no2: newList['no2'],
+                no: newList['no'],
+                so2: newList['so2'],
+                pm10: newList['pm10'],
+                nh3: newList['nh3'],
               )
             );
+            print(pol_path);
       } catch(e) {
-        print("AQ Server is unavailable");
-        print(e.toString());
+        
         newList = cached_pollution;
         if (cached_pollution == null)
           pol_path.add(LocationPollution(
@@ -173,16 +161,24 @@ class GMapState extends State<GMap> {
             pm25: 0,
             co: 0,
             no2: 0,
+            no: 0,
+            so2: 0,
+            pm10: 0,
+            nh3: 0
         ));
         else
           pol_path.add(LocationPollution(
             path: path_id,
             latitude: currentLocation.latitude+0.0001*reduce_calls,
             longitude: currentLocation.longitude+0.0001*reduce_calls,
-            o3: newList[0].map_pollution['o3'],
-            pm25: newList[0].map_pollution['pm25'],
-            co: newList[0].map_pollution['co'],
-            no2: newList[0].map_pollution['no2'],
+                o3: newList['o3'],
+                pm25: newList['pm2_5'],
+                co: newList['co'],
+                no2: newList['no2'],
+                no: newList['no'],
+                so2: newList['so2'],
+                pm10: newList['pm10'],
+                nh3: newList['nh3'],
           ));
       }
       polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
