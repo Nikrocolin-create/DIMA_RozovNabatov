@@ -5,14 +5,14 @@ import 'dart:async';
 abstract class DB {
 
   static Database _db;
-  static int get _version => 2;
+  static int get _version => 1;
 
   static Future<void> init() async {
 
     if (_db != null) { return; }
 
     try {
-      String _path = await getDatabasesPath() + 'google_map';
+      String _path = await getDatabasesPath() + 'google_maps1';
       print(_path);
       _db = await openDatabase(_path, version: _version, onCreate: onCreate);
     }
@@ -23,8 +23,7 @@ abstract class DB {
 
   static void onCreate(Database db, int version) async =>
       await db.execute('CREATE TABLE location_pollution (id INTEGER PRIMARY KEY AUTOINCREMENT, path INTEGER, latitude DOUBLE, longitude DOUBLE, '
-          'co double, pm25 double, no2 double, o3 double, no double, so2 double, pm10 double, nh3 double' + 
-          'measure_time datetime default current_timestamp)');
+          'co double, pm25 double, no2 double, o3 double, no double, so2 double, pm10 double, nh3 double, measure_time datetime default current_timestamp)');
 
   static void onDrop() async=> await _db.execute("drop table location_pollution");
 

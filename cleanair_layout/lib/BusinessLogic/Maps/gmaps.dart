@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cleanair_layout/BusinessLogic/exceptions/503Unavailable.dart';
 import 'package:cleanair_layout/BusinessLogic/database/db.dart';
+import 'package:cleanair_layout/BusinessLogic/locationPollution/colorpollution.dart';
 import 'package:cleanair_layout/BusinessLogic/locationPollution/location_polution.dart';
 import 'package:cleanair_layout/constants.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -55,6 +56,7 @@ Future<Map<dynamic, dynamic>> use_future(String url) async {
 }
 
 class GMapState extends State<GMap> {
+  APIWork color_return = new APIWork();
   Completer<GoogleMapController> _controller = Completer();
   bool start_run = true;
   bool action = false;
@@ -69,8 +71,6 @@ class GMapState extends State<GMap> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints;
   String googleAPIKey = "AIzaSyBOupgrKvCmQn5B3a3Vjn6WgG7FrpNU8f0";
-  BitmapDescriptor sourceIcon; // for my custom marker pins
-  BitmapDescriptor destinationIcon;
   LocationData
       currentLocation; // the user's initial location and current location as it moves
   LocationData destinationLocation; // a reference to the destination location
@@ -83,8 +83,6 @@ class GMapState extends State<GMap> {
     location = new Location();
     polylinePoints = PolylinePoints();
     get_max_id();
-    // subscribe to changes in the user's location
-    // by "listening" to the location's onLocationChanged event
     location.onLocationChanged.listen((LocationData cLoc) {
       // cLoc contains the lat and long of the
       // current user's position in real time,
@@ -94,7 +92,6 @@ class GMapState extends State<GMap> {
       updatePinOnMap();
     });
     // set custom marker pins
-    setSourceAndDestinationIcons();
     // set the initial location
     setInitialLocation();
   }
@@ -124,13 +121,14 @@ class GMapState extends State<GMap> {
     
     reduce_calls++;
     if (!start_run && (reduce_calls % 2 == 0)) {
+      DB.query("location_pollution");
       Map<dynamic, dynamic> newList;
       try{
         print("coordinates=${currentLocation.latitude},${currentLocation.longitude}");
       
            newList = await use_future("http://api.openweathermap.org/data/2.5/air_pollution?lat=${currentLocation.latitude}"+
                                "&lon=${currentLocation.longitude}&appid=$cleanAirAPIKey");
-           
+
             cached_pollution = newList;
 
             pol_path.add(
@@ -138,14 +136,14 @@ class GMapState extends State<GMap> {
                 path: path_id,
                 latitude: currentLocation.latitude+0.0001*reduce_calls,
                 longitude: currentLocation.longitude+0.0001*reduce_calls,
-                o3: newList['o3'],
-                pm25: newList['pm2_5'],
-                co: newList['co'],
-                no2: newList['no2'],
-                no: newList['no'],
-                so2: newList['so2'],
-                pm10: newList['pm10'],
-                nh3: newList['nh3'],
+                o3: newList['o3'].toDouble(),
+                pm25: newList['pm2_5'].toDouble(),
+                co: newList['co'].toDouble(),
+                no2: newList['no2'].toDouble(),
+                no: newList['no'].toDouble(),
+                so2: newList['so2'].toDouble(),
+                pm10: newList['pm10'].toDouble(),
+                nh3: newList['nh3'].toDouble(),
               )
             );
             print(pol_path);
@@ -157,28 +155,28 @@ class GMapState extends State<GMap> {
             path: path_id,
             latitude: currentLocation.latitude+0.0001*reduce_calls,
             longitude: currentLocation.longitude+0.0001*reduce_calls,
-            o3: 0,
-            pm25: 0,
-            co: 0,
-            no2: 0,
-            no: 0,
-            so2: 0,
-            pm10: 0,
-            nh3: 0
+            o3: 0.0,
+            pm25: 0.0,
+            co: 0.0,
+            no2: 0.0,
+            no: 0.0,
+            so2: 0.0,
+            pm10: 0.0,
+            nh3: 0.0
         ));
         else
           pol_path.add(LocationPollution(
             path: path_id,
             latitude: currentLocation.latitude+0.0001*reduce_calls,
             longitude: currentLocation.longitude+0.0001*reduce_calls,
-                o3: newList['o3'],
-                pm25: newList['pm2_5'],
-                co: newList['co'],
-                no2: newList['no2'],
-                no: newList['no'],
-                so2: newList['so2'],
-                pm10: newList['pm10'],
-                nh3: newList['nh3'],
+                o3: newList['o3'].toDouble(),
+                pm25: newList['pm2_5'].toDouble(),
+                co: newList['co'].toDouble(),
+                no2: newList['no2'].toDouble(),
+                no: newList['no'].toDouble(),
+                so2: newList['so2'].toDouble(),
+                pm10: newList['pm10'].toDouble(),
+                nh3: newList['nh3'].toDouble(),
           ));
       }
       polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
@@ -187,24 +185,7 @@ class GMapState extends State<GMap> {
 
   }
 
-  Color setCircleColor(){
-    print("setting a color");
-    if (pol_path.isEmpty)
-      return Colors.white;
-    if (pol_path.last.pm25 > 30000) {
-      return Colors.amber;
-    } else
-      return Colors.green;
-  }
 
-  void setSourceAndDestinationIcons() async {
-    sourceIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5), 'assets/driving_pin.png');
-
-    destinationIcon = await BitmapDescriptor.fromAssetImage(
-        ImageConfiguration(devicePixelRatio: 2.5),
-        'assets/destination_map_marker.png');
-  }
 
   void setInitialLocation() async {
     // set the initial location by pulling the user's
@@ -230,6 +211,13 @@ class GMapState extends State<GMap> {
   }
 
   void setCircles() async {
+    int i = await color_return.returnColor();
+    List<dynamic> category = [Colors.green[400],
+      Colors.yellow,
+      Colors.amber,
+      Colors.deepOrange,
+      Colors.red,
+      Colors.purple[900]];
     if (this.mounted) {
       setState(() {
         _circles.clear();
@@ -241,8 +229,8 @@ class GMapState extends State<GMap> {
             center: LatLng(currentLocation.latitude,currentLocation.longitude),
             radius: 100,
             strokeWidth: 5,
-            strokeColor: setCircleColor(),
-            fillColor: setCircleColor().withOpacity(0.5)),
+            strokeColor: category[i],
+            fillColor: category[i].withOpacity(0.5)),
         );
       });
     } else {
@@ -272,11 +260,7 @@ class GMapState extends State<GMap> {
 
         // the trick is to remove the marker (by id)
         // and add it again at the updated location
-        _markers.removeWhere((m) => m.markerId.value == "sourcePin");
-        _markers.add(Marker(
-          markerId: MarkerId("sourcePin"),
-          position: pinPosition, // updated position
-          icon: sourceIcon));
+
       });
     } else {
       return ;
@@ -350,6 +334,8 @@ class GMapState extends State<GMap> {
                           setState(() {
                             path_id += 1;
                           });
+                          var que = await DB.query("location_pollution");
+                          print(que);
                           for (LocationPollution item in pol_path) {
                             await DB.insert('location_pollution', item);
                           }
