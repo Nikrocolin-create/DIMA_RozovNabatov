@@ -1,10 +1,12 @@
 import 'dart:core';
 import 'package:cleanair_layout/BusinessLogic/database/db.dart';
+import 'package:cleanair_layout/Screens/Favorites/ShowRoute.dart';
 import 'package:cleanair_layout/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
+import "package:cleanair_layout/Screens/Favorites/ListOfRoutes.dart";
 
 class PathList extends StatefulWidget {
   @override
@@ -31,13 +33,11 @@ class _PathListState extends State {
 
   Future<void> update_list() async {
     query = await DB.time_query();
-
     var prom_dist;
     for (var item in query) {
 
       prom_dist = 0;
       query_for_distance = await DB.path_query(item['path']);
-
       int i;
       if (query_for_distance.length > 1)
         for (i = 1; i < query_for_distance.length; i++) {
@@ -55,26 +55,6 @@ class _PathListState extends State {
   Widget build(BuildContext context) {
     
     return Container(
-        // appBar: new AppBar(
-        //   title: new Text("My routes"),
-        //   actions: [
-        //     PopupMenuButton(
-        //       onSelected: (String choice) {
-        //         if (choice == "/")
-        //           Navigator.pushNamed(context, '/');
-        //         else if (choice == "/map")
-        //           Navigator.pushNamed(context, '/map');
-        //       },
-        //       itemBuilder: (BuildContext context) {
-        //         return Pages.choices.map((String choice) {
-        //           return PopupMenuItem(
-        //             value: choice,
-        //             child: Text(choice),
-        //           );
-        //         }).toList();
-        //       },
-        //     )
-        //   ],),
         child:  FutureBuilder<dynamic>(
             future: update_list(),
             builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -94,8 +74,8 @@ class _PathListState extends State {
                     physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final item = query[index];
-
-                      return InfoBlock(query[index],distances[query[index]["path"]], index);
+                      print("Item: ${item["path"]}");
+                      return InfoBlock(query[index],distances[query[index]["path"]], item["path"]);
                     },
                   );
               }
@@ -113,7 +93,7 @@ class InfoBlock extends StatelessWidget {
   var maxMeasureTime;
   var distance;
   var time;
-  //var index;
+  var path;
 
   String convertDateTimeDisplay(String date) {
     final DateFormat displayFormater = DateFormat('yyyy-MM-dd HH:mm:ss');
@@ -145,7 +125,7 @@ class InfoBlock extends StatelessWidget {
     time = differenceBetweenTimes(resp["min(measure_time)"], resp["max(measure_time)"]);
     maxMeasureTime = resp["max(measure_time)"];
     distance = dist;
-//    index = index.toString();
+    path = index;
   }
 
   Widget build(BuildContext context){
@@ -172,7 +152,14 @@ class InfoBlock extends StatelessWidget {
               children: [
                 FlatButton(
                   textColor: kPrimaryColor,
-                  onPressed: () {},
+                  onPressed: () {
+                    print("Index: ${path}");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RouteShower(path.toString()),
+                        ));
+                  },
                   child: const Text('Dislay on Map'),
                 ),
                 FlatButton(

@@ -28,11 +28,13 @@ class ResponseParameters {
   var lat;
   var lon;
   Map<dynamic, dynamic> params;
+  int aqi;
 
-  ResponseParameters(lt, ln, par) {
+  ResponseParameters(lt, ln, par, aqi) {
     lat = lt;
     lon = ln;
     params = par;
+    params["aqi"] = aqi;
   }
 }
 
@@ -47,7 +49,8 @@ Future<Map<dynamic, dynamic>> use_future(String url) async {
     ResponseParameters l = ResponseParameters(
         value2['lat'],
         value2['lon'],
-        value[0]['components']
+        value[0]['components'],
+        value[0]["main"]["aqi"],
     );
     return l.params;
   } else {
@@ -128,7 +131,7 @@ class GMapState extends State<GMap> {
       
            newList = await use_future("http://api.openweathermap.org/data/2.5/air_pollution?lat=${currentLocation.latitude}"+
                                "&lon=${currentLocation.longitude}&appid=$cleanAirAPIKey");
-
+            print("MAIN AQI ${newList["aqi"]}");
             cached_pollution = newList;
 
             pol_path.add(
@@ -144,6 +147,7 @@ class GMapState extends State<GMap> {
                 so2: newList['so2'].toDouble(),
                 pm10: newList['pm10'].toDouble(),
                 nh3: newList['nh3'].toDouble(),
+                aqi: newList['aqi'],
               )
             );
             print(pol_path);
@@ -162,7 +166,8 @@ class GMapState extends State<GMap> {
             no: 0.0,
             so2: 0.0,
             pm10: 0.0,
-            nh3: 0.0
+            nh3: 0.0,
+            aqi: newList['aqi'],
         ));
         else
           pol_path.add(LocationPollution(
@@ -177,6 +182,7 @@ class GMapState extends State<GMap> {
                 so2: newList['so2'].toDouble(),
                 pm10: newList['pm10'].toDouble(),
                 nh3: newList['nh3'].toDouble(),
+                aqi: newList['aqi'],
           ));
       }
       polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));

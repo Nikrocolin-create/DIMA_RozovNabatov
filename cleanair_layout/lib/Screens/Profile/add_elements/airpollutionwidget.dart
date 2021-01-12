@@ -25,7 +25,8 @@ class AirPollutionWidget extends StatefulWidget {
                               "Well, still okay",
                               "It's lightly polluted :(",
                               "It's not good I think",
-                              "Dude, it's time to leave it!"
+                              "Dude, it's time to leave it!",
+                              "Run to the shelter!"
                             ];
 
   @override
