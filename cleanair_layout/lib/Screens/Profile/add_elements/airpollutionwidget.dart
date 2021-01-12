@@ -10,7 +10,7 @@ class AirPollutionWidget extends StatefulWidget {
 
   final Size size;
   final List<dynamic> category = [Colors.green[400], 
-                                  Colors.yellow,
+                                  Colors.yellow[700],
                                   Colors.amber, 
                                   Colors.deepOrange, 
                                   Colors.red, 
@@ -56,7 +56,7 @@ class _AirPollutionWidget extends State<AirPollutionWidget> {
       children: <Widget> [
           Container(
             width: widget.size.width * 0.79,
-            height: widget.size.height * 0.17,
+            height: widget.size.height * 0.22,
             margin: EdgeInsets.symmetric(vertical: 10),
             child: StreamBuilder<int>(
               stream: getColor(),
@@ -102,54 +102,72 @@ class _AirPollutionWidget extends State<AirPollutionWidget> {
                             ],)                           
                           ]),
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            //SizedBox(width: 0.09 * widget.size.width,),
                             StreamBuilder<Map<String, dynamic>>(
                               stream: getMeasure(),
                               builder: (BuildContext context, AsyncSnapshot<Map<String, dynamic>> snapshot) {
                                 if (snapshot.hasData) {
-                                  return Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['co'],
-                                        data: 'co', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['no'],
-                                        data: 'no', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['no2'],
-                                        data: 'no2', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['o3'],
-                                        data: 'o3', 
-                                      ),                                      
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['so2'],
-                                        data: 'so2', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['pm2_5'],
-                                        data: 'pm2.5', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['pm10'],
-                                        data: 'pm10', 
-                                      ),
-                                      ParameterPollution(
-                                        snapshot: snapshot.data['nh3'],
-                                        data: 'nh3', 
-                                      ),                                                                         
-                                    ],
+                                  return Container(
+                                    height: widget.size.height * 0.12,
+                                    width: widget.size.width * 0.77,
+                                    child: GridView.count(
+                                      crossAxisCount: 4,
+                                      childAspectRatio: 2,
+                                      children: [
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['co'],
+                                          data: 'co', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['no'],
+                                          data: 'no', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['no2'],
+                                          data: 'no2', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['o3'],
+                                          data: 'o3', 
+                                        ),                                      
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['so2'],
+                                          data: 'so2', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['pm2_5'],
+                                          data: 'pm2.5', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['pm10'],
+                                          data: 'pm10', 
+                                        ),
+                                        ParameterPollution(
+                                          snapshot: snapshot.data['nh3'],
+                                          data: 'nh3', 
+                                        ),
+                                      ],
+                                    ),
                                   );
                                 } else if (snapshot.hasError) {
-                                  return Text('The data will be soon!\nWait a few seconds');
+                                  return Container(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 80),
+                                      child: Text(
+                                        'The data will be soon!\nWait a few seconds', 
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.white),
+                                    ),
+                                    ),
+                                  );
                                 } else {
-                                  return CircularProgressIndicator();
+                                  return Container(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 140),
+                                      child: CircularProgressIndicator(),
+                                    )
+                                  );
                                 }
                               },
                             ),
@@ -192,16 +210,21 @@ class ParameterPollution extends StatelessWidget {
     @required this.data,
   }) : super(key: key);
 
-  final double snapshot; 
+  final dynamic snapshot; 
   final String data;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10),
-      child: Column(children: [
-        Text('$data', style: TextStyle(color: Colors.white),),
-        Text('$snapshot', style: TextStyle(color: Colors.white),),
+      padding: EdgeInsets.only(left: 5.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+            Text('$data\n$snapshot', 
+                      style: TextStyle(color: Colors.white), 
+                      textScaleFactor: 0.9, 
+                      textAlign: TextAlign.center,
+            ),
     ],)
     );
   }

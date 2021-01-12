@@ -24,16 +24,16 @@ class LocationPollution extends Model {
     Map<String, dynamic> map = {
       'id' : id,
       'path': path,
-      'latitude': latitude,
-      'longitude': longitude,
-      'o3': o3,
-      'pm25': pm25,
-      'co': co,
-      'no2': no2,
-      'no': no,
-      'so2': so2,
-      'pm10': pm10,
-      'nh3': nh3,
+      'latitude': latitude.toDouble(),
+      'longitude': longitude.toDouble(),
+      'o3': o3.toDouble(),
+      'pm25': pm25.toDouble(),
+      'co': co.toDouble(),
+      'no2': no2.toDouble(),
+      'no': no.toDouble(),
+      'so2': so2.toDouble(),
+      'pm10': pm10.toDouble(),
+      'nh3': nh3.toDouble(),
     };
 
     if (id != null) {

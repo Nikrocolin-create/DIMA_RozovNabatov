@@ -213,7 +213,7 @@ class GMapState extends State<GMap> {
   void setCircles() async {
     int i = await color_return.returnColor();
     List<dynamic> category = [Colors.green[400],
-      Colors.yellow,
+      Colors.yellow[700],
       Colors.amber,
       Colors.deepOrange,
       Colors.red,

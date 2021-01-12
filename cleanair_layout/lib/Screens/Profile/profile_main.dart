@@ -23,7 +23,7 @@ class MainMenu extends StatelessWidget {
               children: <Widget>[
                 SizedBox(height: size.height * 0.05,),
                 IconContainerMenu(),
-                SizedBox(height: size.height * 0.18,),
+                SizedBox(height: size.height * 0.12,),
                 AirPollutionWidget(size: size),
               ],
             ),

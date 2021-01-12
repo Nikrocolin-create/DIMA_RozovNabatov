@@ -1,12 +1,11 @@
 import 'package:cleanair_layout/Screens/Favorites/main_favorite.dart';
 import 'package:cleanair_layout/Screens/Map/map_main.dart';
 import 'package:cleanair_layout/Screens/Profile/add_elements/iconbutton.dart';
+import 'package:cleanair_layout/Screens/Profile/add_elements/inside_widgets/calendarmain.dart';
 import 'package:cleanair_layout/Screens/Profile/add_elements/inside_widgets/customdialoglogin.dart';
 import 'package:cleanair_layout/Screens/Profile/add_elements/inside_widgets/help.dart';
 import 'package:cleanair_layout/Screens/Profile/add_elements/inside_widgets/settings/settings.dart';
-import 'package:cleanair_layout/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 class IconContainerMenu extends StatelessWidget {
 
@@ -43,7 +42,13 @@ class IconContainerMenu extends StatelessWidget {
               IconButtonContainer(
                 iconObject: Icon(Icons.calendar_today, color: Colors.blueAccent, size: this.iconSize,),
                 press: () {
-                
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return CalendarMain();
+                      }
+                    )
+                  );
                 },
                 text: "Calendar",
                 size: size.width / 3.33,
@@ -111,3 +116,4 @@ class IconContainerMenu extends StatelessWidget {
     );
   }
 }
+

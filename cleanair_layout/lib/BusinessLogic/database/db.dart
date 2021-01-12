@@ -49,4 +49,8 @@ abstract class DB {
   static Future<List<Map<String, dynamic>>> max_query() async {
     return _db.rawQuery('SELECT max(path) FROM location_pollution GROUP BY path');
   }
+
+  static Future<List<Map<String, dynamic>>> forDate(dynamic day) {
+    return _db.rawQuery('SELECT path, co, pm25, no2, o3, no, so2, pm10, nh3, measure_time from location_pollution where measure_time=$day');
+  }
 }
