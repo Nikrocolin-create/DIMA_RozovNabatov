@@ -60,6 +60,8 @@ Future<Map<dynamic, dynamic>> use_future(String url) async {
 
 class GMapState extends State<GMap> {
   APIWork color_return = new APIWork();
+  int mock_walking;
+  LocationData mock_Location;
   Completer<GoogleMapController> _controller = Completer();
   bool start_run = true;
   bool action = false;
@@ -74,9 +76,7 @@ class GMapState extends State<GMap> {
   List<LatLng> polylineCoordinates = [];
   PolylinePoints polylinePoints;
   String googleAPIKey = "AIzaSyBOupgrKvCmQn5B3a3Vjn6WgG7FrpNU8f0";
-  LocationData
-      currentLocation; // the user's initial location and current location as it moves
-  LocationData destinationLocation; // a reference to the destination location
+  LocationData currentLocation; // the user's initial location and current location as it moves
   Location location; // wrapper around the location API
 
   @override
@@ -85,12 +85,23 @@ class GMapState extends State<GMap> {
     // create an instance of Location
     location = new Location();
     polylinePoints = PolylinePoints();
+    mock_walking = 0;
     get_max_id();
     location.onLocationChanged.listen((LocationData cLoc) {
       // cLoc contains the lat and long of the
       // current user's position in real time,
       // so we're holding on to it
       currentLocation = cLoc;
+      mock_Location = LocationData.fromMap({"latitude": currentLocation.latitude+0.0001*mock_walking, "longitude": currentLocation.longitude + 0.0001*mock_walking});
+      _markers.clear();
+      print("adding a marker");
+      _markers.add(
+        Marker(
+          markerId: MarkerId("person"),
+          position: LatLng(mock_Location.latitude,mock_Location.longitude),
+        )
+      );
+      setCircles();
       get_pollution();
       updatePinOnMap();
     });
@@ -124,21 +135,22 @@ class GMapState extends State<GMap> {
     
     reduce_calls++;
     if (!start_run && (reduce_calls % 2 == 0)) {
+      mock_walking++;
       DB.query("location_pollution");
       Map<dynamic, dynamic> newList;
       try{
         print("coordinates=${currentLocation.latitude},${currentLocation.longitude}");
-      
-           newList = await use_future("http://api.openweathermap.org/data/2.5/air_pollution?lat=${currentLocation.latitude}"+
-                               "&lon=${currentLocation.longitude}&appid=$cleanAirAPIKey");
-            print("MAIN AQI ${newList["aqi"]}");
-            cached_pollution = newList;
 
+
+           newList = await use_future("http://api.openweathermap.org/data/2.5/air_pollution?lat=${mock_Location.latitude}"+
+                               "&lon=${mock_Location.longitude}&appid=$cleanAirAPIKey");
+            cached_pollution = newList;
+          print("coordinates mock =${mock_Location.latitude},${mock_Location.longitude}");
             pol_path.add(
               LocationPollution(
                 path: path_id,
-                latitude: currentLocation.latitude+0.0001*reduce_calls,
-                longitude: currentLocation.longitude+0.0001*reduce_calls,
+                latitude: mock_Location.latitude,
+                longitude: mock_Location.longitude,
                 o3: newList['o3'].toDouble(),
                 pm25: newList['pm2_5'].toDouble(),
                 co: newList['co'].toDouble(),
@@ -157,8 +169,8 @@ class GMapState extends State<GMap> {
         if (cached_pollution == null)
           pol_path.add(LocationPollution(
             path: path_id,
-            latitude: currentLocation.latitude+0.0001*reduce_calls,
-            longitude: currentLocation.longitude+0.0001*reduce_calls,
+            latitude: mock_Location.latitude,
+            longitude: mock_Location.longitude,
             o3: 0.0,
             pm25: 0.0,
             co: 0.0,
@@ -172,8 +184,8 @@ class GMapState extends State<GMap> {
         else
           pol_path.add(LocationPollution(
             path: path_id,
-            latitude: currentLocation.latitude+0.0001*reduce_calls,
-            longitude: currentLocation.longitude+0.0001*reduce_calls,
+            latitude: mock_Location.latitude,
+            longitude: mock_Location.longitude,
                 o3: newList['o3'].toDouble(),
                 pm25: newList['pm2_5'].toDouble(),
                 co: newList['co'].toDouble(),
@@ -185,7 +197,7 @@ class GMapState extends State<GMap> {
                 aqi: newList['aqi'],
           ));
       }
-      polylineCoordinates.add(LatLng(currentLocation.latitude+0.0001*reduce_calls,currentLocation.longitude+0.0001*reduce_calls));
+      polylineCoordinates.add(LatLng(mock_Location.latitude,mock_Location.longitude));
       print(polylineCoordinates);
     }
 
@@ -197,6 +209,8 @@ class GMapState extends State<GMap> {
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
     currentLocation = await location.getLocation();
+    mock_Location = currentLocation;
+
   }
 
 
@@ -228,11 +242,11 @@ class GMapState extends State<GMap> {
       setState(() {
         _circles.clear();
         print("adding a circle");
-        print(LatLng(currentLocation.latitude,currentLocation.longitude));
+        print(LatLng(mock_Location.latitude,mock_Location.longitude));
         _circles.add(
           Circle(
             circleId: CircleId("circle"),
-            center: LatLng(currentLocation.latitude,currentLocation.longitude),
+            center: LatLng(mock_Location.latitude,mock_Location.longitude),
             radius: 100,
             strokeWidth: 5,
             strokeColor: category[i],
@@ -252,7 +266,7 @@ class GMapState extends State<GMap> {
       zoom: CAMERA_ZOOM,
       tilt: CAMERA_TILT,
       bearing: CAMERA_BEARING,
-      target: LatLng(currentLocation.latitude, currentLocation.longitude),
+      target: LatLng(mock_Location.latitude, mock_Location.longitude),
     );
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(cPosition));
@@ -262,8 +276,7 @@ class GMapState extends State<GMap> {
       setState(() {
         // updated position
         var pinPosition =
-        LatLng(currentLocation.latitude, currentLocation.longitude);
-
+        LatLng(mock_Location.latitude, mock_Location.longitude);
         // the trick is to remove the marker (by id)
         // and add it again at the updated location
 
@@ -286,9 +299,9 @@ class GMapState extends State<GMap> {
         tilt: CAMERA_TILT,
         bearing: CAMERA_BEARING,
         target: SOURCE_LOCATION);
-    if (currentLocation != null) {
+    if (mock_Location != null) {
       initialCameraPosition = CameraPosition(
-          target: LatLng(currentLocation.latitude, currentLocation.longitude),
+          target: LatLng(mock_Location.latitude, mock_Location.longitude),
           zoom: CAMERA_ZOOM,
           tilt: CAMERA_TILT,
           bearing: CAMERA_BEARING);
@@ -307,7 +320,7 @@ class GMapState extends State<GMap> {
             Expanded(
                 flex: 7,
                 child: GoogleMap(
-                    myLocationEnabled: true,
+                    myLocationEnabled: false,
                     compassEnabled: true,
                     tiltGesturesEnabled: false,
                     markers: _markers,
