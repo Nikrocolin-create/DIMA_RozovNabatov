@@ -27,7 +27,8 @@ class APIWork {
       lBefore = ResponseParameters(
           value2Before['lat'],
           value2Before['lon'],
-          valueBefore[0]['components']
+          valueBefore[0]['components'],
+          valueBefore[0]['main']['aqi'],
       );
 
       int c = valueBefore[0]['main']['aqi'] - 1;
