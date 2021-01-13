@@ -119,34 +119,50 @@ class _AirPollutionWidget extends State<AirPollutionWidget> {
                                         ParameterPollution(
                                           snapshot: snapshot.data['co'],
                                           data: 'co', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['no'],
                                           data: 'no', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['no2'],
                                           data: 'no2', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['o3'],
                                           data: 'o3', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),                                      
                                         ParameterPollution(
                                           snapshot: snapshot.data['so2'],
                                           data: 'so2', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['pm2_5'],
                                           data: 'pm2.5', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['pm10'],
                                           data: 'pm10', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                         ParameterPollution(
                                           snapshot: snapshot.data['nh3'],
                                           data: 'nh3', 
+                                          padding: 5.0,
+                                          color: Colors.white,
                                         ),
                                       ],
                                     ),
@@ -209,20 +225,24 @@ class ParameterPollution extends StatelessWidget {
     Key key,
     @required this.snapshot,
     @required this.data,
+    @required this.padding,
+    @required this.color,
   }) : super(key: key);
 
   final dynamic snapshot; 
   final String data;
+  final dynamic padding;
+  final dynamic color;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 5.0),
+      padding: EdgeInsets.only(left: padding),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
             Text('$data\n$snapshot', 
-                      style: TextStyle(color: Colors.white), 
+                      style: TextStyle(color: color), 
                       textScaleFactor: 0.9, 
                       textAlign: TextAlign.center,
             ),

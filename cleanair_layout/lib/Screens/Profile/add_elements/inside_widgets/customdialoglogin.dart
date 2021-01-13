@@ -1,7 +1,33 @@
+import 'package:cleanair_layout/BusinessLogic/login/auth.dart';
+import 'package:cleanair_layout/BusinessLogic/login/fitkit.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'loginButtons.dart';
 
-class CustomDialogLogin extends StatelessWidget {
+class CustomDialogLogin extends StatefulWidget {
+
+  @override
+  _CustomDialogLoginState createState() => _CustomDialogLoginState(); 
+
+}
+
+class _CustomDialogLoginState extends State<CustomDialogLogin> {
+
+  bool _initialized = false;
+  bool _error = false; 
+
+  void initializeFlutterFire() async {
+    // await Firebase.initializeApp();
+    setState(() {
+      _initialized = true;
+    });
+  }
+
+  @override
+  void initState() {
+    initializeFlutterFire();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +53,37 @@ class CustomDialogLogin extends StatelessWidget {
                     size: size, 
                     text: "Sign In With Google Fit",
                     image: Image(image: AssetImage("assets/icons/google-logo.png"), height: 15.0,),
-                    onPress: () {},
+                    onPress: () {
+                      //if (_initialized == true) {
+                      //  AuthGoogleService auth = new AuthGoogleService();
+
+                      //  auth.googleSignIn().then((result) {
+                      //    if (result != null) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return FitInfo();
+                                }
+                              ),
+                            );
+                          //}
+                       // });
+                      //}
+                    },
                   ),
                   LogInButtons(
                     size: size,
                     text: "Sign In With HealthKit",
                     image: Image(image: AssetImage("assets/icons/health-logo.png"), height: 18.0,),
-                    onPress: () {},
+                    onPress: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return FitInfo();
+                          }
+                        ),
+                      );                      
+                    },
                   ),
                 ],
               ),
