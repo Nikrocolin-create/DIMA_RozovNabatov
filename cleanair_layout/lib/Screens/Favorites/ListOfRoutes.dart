@@ -71,7 +71,6 @@ class _PathListState extends State {
                     itemCount: query.length,
                     // Provide a builder function. This is where the magic happens.
                     // Convert each item into a widget based on the type of item it is.
-                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
                       final item = query[index];
                       print("Item: ${item["path"]}");

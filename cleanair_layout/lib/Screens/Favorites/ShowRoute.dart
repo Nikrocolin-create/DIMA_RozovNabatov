@@ -83,6 +83,14 @@ class RouteState extends State<RouteShower> {
     pm10 /= smt.length;
     so2 /= smt.length;
     nh3 /= smt.length;
+    co = double.parse(co.toStringAsFixed(2));
+    no2 = double.parse(no2.toStringAsFixed(2));
+    pm25 = double.parse(pm25.toStringAsFixed(2));
+    o3 = double.parse(o3.toStringAsFixed(2));
+    no = double.parse(no.toStringAsFixed(2));
+    pm10 = double.parse(pm10.toStringAsFixed(2));
+    so2 = double.parse(so2.toStringAsFixed(2));
+    nh3 = double.parse(nh3.toStringAsFixed(2));
   }
 
   Future<void> setPolylines() async {

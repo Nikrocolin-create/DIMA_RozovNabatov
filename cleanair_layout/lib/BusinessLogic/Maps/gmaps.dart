@@ -11,6 +11,7 @@ import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:vibration/vibration.dart';
 
 const double CAMERA_ZOOM = 16;
 const double CAMERA_TILT = 0;
@@ -59,6 +60,7 @@ Future<Map<dynamic, dynamic>> use_future(String url) async {
 }
 
 class GMapState extends State<GMap> {
+  var cached_color;
   APIWork color_return = new APIWork();
   int mock_walking;
   LocationData mock_Location;
@@ -252,6 +254,12 @@ class GMapState extends State<GMap> {
             strokeColor: category[i],
             fillColor: category[i].withOpacity(0.5)),
         );
+        // if(cached_color == null) {
+        //   cached_color = i;
+        // } else if (cached_color != i) {
+        //   Vibration.vibrate();
+        // }
+        // cached_color = i;
       });
     } else {
       return ;
